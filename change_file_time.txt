@@ -1,0 +1,35 @@
+import os
+import time
+from datetime import datetime
+
+def change_folder_and_files_dates(directory, access_time, modification_time):
+
+    if isinstance(access_time, datetime):
+        access_time = access_time.timestamp()
+    if isinstance(modification_time, datetime):
+        modification_time = modification_time.timestamp()
+
+    for root, dirs, files in os.walk(directory, topdown=False):
+        for name in files:
+            file_path = os.path.join(root, name)
+            os.utime(file_path, (access_time, modification_time))
+            print(f"Updated file: {file_path}")
+
+        for name in dirs:
+            dir_path = os.path.join(root, name)
+            os.utime(dir_path, (access_time, modification_time))
+            print(f"Updated folder: {dir_path}")
+
+    os.utime(directory, (access_time, modification_time))
+    print(f"Updated root folder: {directory}")
+
+if __name__ == "__main__":
+    directory_path = input("Enter your directory: ")
+    new_access_time = input("Enter your access dates in YYYY-MM-DD HH:MM:SS ")
+    new_modification_time = input("Enter your modification dates in YYYY-MM-DD HH:MM:SS ")
+
+    new_access_time = datetime.strptime(new_access_time, "%Y-%m-%d %H:%M:%S")
+    new_modification_time = datetime.strptime(new_modification_time, "%Y-%m-%d %H:%M:%S")
+
+    change_folder_and_files_dates(directory_path, new_access_time, new_modification_time)
+#2020-01-01 10:10:10
